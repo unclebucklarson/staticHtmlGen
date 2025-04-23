@@ -1,10 +1,11 @@
 
 class HTMLNode():
-    def __init__(self, tag: str = None, value: str = None, children: list = None, props: dict = None):
-        tag = self.tag
-        value = self.value
-        children = self.children 
-        props = self.props
+    def __init__(self, tag = None, value = None, children = None, props = None):
+        
+        self.tag = tag
+        self.value = value
+        self.children = children
+        self.props = props
     
     def __repr__(self):
         # print some stuff here about the object... 
@@ -19,8 +20,26 @@ class HTMLNode():
         return_string = str()
         
         for key in self.props:
-            return_string += f' "{key}"={self.props[key]}'
+            return_string += f' {key}="{self.props[key]}"'
 
         return return_string
 
+class LEAFNode(HTMLNode):
     
+    def __init__(self, tag, value, props=None):
+        super().__init__(tag, value, [], props)
+    
+    def __repr__(self):
+        # Override the parent __repr__ method
+        return f"tag: {self.tag}, value: {self.value}, props: {self.props}"
+
+    def to_html(self):
+        # no value, raise a ValueError
+        if self.value == None:
+            raise ValueError
+        # no tag (ie None), value shoudl be returned as raw text
+        elif self.tag == None:
+            return self.value
+        # other wise return the leaf
+        else:
+            return f"<{self.tag}>{self.value}</{self.tag}>"
