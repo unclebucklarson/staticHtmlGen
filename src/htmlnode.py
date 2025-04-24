@@ -24,7 +24,7 @@ class HTMLNode():
 
         return return_string
 
-class LEAFNode(HTMLNode):
+class LeafNode(HTMLNode):
     
     def __init__(self, tag, value, props=None):
         super().__init__(tag, value, [], props)
@@ -43,3 +43,63 @@ class LEAFNode(HTMLNode):
         # other wise return the leaf
         else:
             return f"<{self.tag}>{self.value}</{self.tag}>"
+
+class ParentNode(HTMLNode):
+    
+    def __init__(self, tag, children, props=None):
+        super().__init__(tag=tag, children=children, props=props)
+        
+    def to_html(self):
+        if self.tag == None:
+            raise ValueError("tag cannot be  none")
+        
+        if self.children == None:
+            raise ValueError("Children canot be none")
+
+        result = f"<{self.tag}>"
+        for child in self.children:
+            result += child.to_html()
+        result += f"</{self.tag}>"
+        
+        return result
+    
+    def recurse_the_tags(a_node):
+        the_tag = a_node.tag
+        
+        for child in a_node.children:
+            the_string = ParentNode.recurse_the_tags(child)
+
+    def non_recursive_html(parent_node):
+        # Verified this non recursive version works
+        '''
+            from htmlnode import HTMLNode
+            from htmlnode import LeafNode
+            from htmlnode import ParentNode
+
+            node = ParentNode(
+                "p",
+                [
+                    LeafNode("b", "Bold text"),
+                    LeafNode(None, "Normal text"),
+                    LeafNode("i", "italic text"),
+                    LeafNode(None, "Normal text"),
+                ],
+            )
+            In [3]: node.to_html()
+            Out[3]: '<p><b>Bold text</b>Normal text<i>italic text</i>Normal text</p>'
+            # That is the expected output... but its not recursive... 
+        '''
+        result = ""
+        
+        tag = parent_node.tag
+        result += f"<{tag}>"
+        
+        for child in parent_node.children:
+            
+            inner_result = child.to_html()
+            result += inner_result
+        
+        return result + f"</{tag}>"
+            
+        
+    
