@@ -1,3 +1,30 @@
+from enum import Enum
+
+class TextType(Enum):
+    # Not really sure what should be represented here... 
+    BOLD = "bold"
+    ITALIC = "Italic"
+    CODE = "code"
+    LINK = "link"
+    IMAGE = "image"
+    TEXT = "text"
+    
+class TextNode():
+    
+    def __init__(self, text: str, text_type: TextType, url: str = None):
+        self.text = text
+        self.text_type = text_type # this is supposed to be a TextType enum
+        self.url = url
+    
+    def __eq__(self, value: TextType) -> bool:
+        
+        if self.text == value.text and self.text_type == value.text_type and self.url == value.url:
+            return True
+        
+        return False
+    
+    def __repr__(self) -> str:
+        return f"TextNode({self.text}, {self.text_type}, {self.url})"
 
 class HTMLNode():
     def __init__(self, tag = None, value = None, children = None, props = None):
@@ -62,44 +89,27 @@ class ParentNode(HTMLNode):
         result += f"</{self.tag}>"
         
         return result
-    
-    def recurse_the_tags(a_node):
-        the_tag = a_node.tag
-        
-        for child in a_node.children:
-            the_string = ParentNode.recurse_the_tags(child)
 
-    def non_recursive_html(parent_node):
-        # Verified this non recursive version works
-        '''
-            from htmlnode import HTMLNode
-            from htmlnode import LeafNode
-            from htmlnode import ParentNode
 
-            node = ParentNode(
-                "p",
-                [
-                    LeafNode("b", "Bold text"),
-                    LeafNode(None, "Normal text"),
-                    LeafNode("i", "italic text"),
-                    LeafNode(None, "Normal text"),
-                ],
-            )
-            In [3]: node.to_html()
-            Out[3]: '<p><b>Bold text</b>Normal text<i>italic text</i>Normal text</p>'
-            # That is the expected output... but its not recursive... 
-        '''
-        result = ""
-        
-        tag = parent_node.tag
-        result += f"<{tag}>"
-        
-        for child in parent_node.children:
-            
-            inner_result = child.to_html()
-            result += inner_result
-        
-        return result + f"</{tag}>"
-            
-        
+def text_node_to_html_node(text_node: TextNode):
     
+    if text_node.text_type == TextType.TEXT:
+        # return a leaf node with no tag just raw text 
+        return LeafNode(value=text_node.text)
+    
+    elif text_node.text_type == TextType.BOLD:
+        return LeafNode("b", text_node.text)
+    
+    elif text_node.text_type == TextType.ITALIC:
+        return LeafNode('i', text_node.text)
+    
+    elif text_node.text_type == TextType.CODE:
+        return LeafNode('Code', text_node.text)
+    
+    elif text_node.text_type == TextType.LINK:
+        return LeafNode('a', text_node.text, {"href": text_node.url})
+    
+    elif text_node.text_type == TextType.IMAGE:
+        return LeafNode("img", "", {"src": text_node.url, "alt": text_node.url})
+    else:
+        raise ValueError("That is not a valid Text Type")

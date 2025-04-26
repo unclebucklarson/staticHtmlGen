@@ -7,6 +7,7 @@ class TextType(Enum):
     CODE = "code"
     LINK = "link"
     IMAGE = "image"
+    TEXT = "text"
     
 class TextNode():
     
@@ -24,6 +25,10 @@ class TextNode():
     
     def __repr__(self) -> str:
         return f"TextNode({self.text}, {self.text_type}, {self.url})"
+
+def text_node_to_html_node(text_node):
+    if text_node.value() == "text":
+        pass
 
 def main():
     text_type_instance = TextType.BOLD
