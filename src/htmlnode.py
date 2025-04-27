@@ -95,7 +95,7 @@ def text_node_to_html_node(text_node: TextNode):
     
     if text_node.text_type == TextType.TEXT:
         # return a leaf node with no tag just raw text 
-        return LeafNode(value=text_node.text)
+        return LeafNode(None, value=text_node.text)
     
     elif text_node.text_type == TextType.BOLD:
         return LeafNode("b", text_node.text)
@@ -104,7 +104,7 @@ def text_node_to_html_node(text_node: TextNode):
         return LeafNode('i', text_node.text)
     
     elif text_node.text_type == TextType.CODE:
-        return LeafNode('Code', text_node.text)
+        return LeafNode('code', text_node.text)
     
     elif text_node.text_type == TextType.LINK:
         return LeafNode('a', text_node.text, {"href": text_node.url})
