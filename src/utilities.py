@@ -11,11 +11,10 @@ def split_nodes_delimiter(old_nodes, delimiter, text_type):
     
     if delimiter == "**":
         type_of_node = TextType.BOLD
-        
-    elif delimeter ==  "`":
+    elif delimiter ==  "`":
         type_of_node = TextType.CODE
-    elif delimeter == "_":
-        type_of_delimeter = TextType.ITALIC
+    elif delimiter == "_":
+        type_of_node = TextType.ITALIC
     else:
         typte_of_text = TextType.TEXT
     
